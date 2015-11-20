@@ -19,7 +19,6 @@ IF        : 'if' ;
 ELSE      : 'else' ;
 WHILE     : 'while' ;
 FUNCTION  : 'function' ;
-VAR       : 'var' ;
 PRINT     : 'print' ;
 
 // Literals
@@ -59,8 +58,8 @@ expr: expr op=( '*' | '/' | '%' ) expr                  # MulDivMod
     | expr op=( '+' | '-' ) expr                        # AddSub
     | expr op=( '<' | '<=' | '>' | '>=' | '==' ) expr   # Comparison
     | FUNCTION parameters block                         # functiondecl
+    | 'var' ID '=' expr                                 # variabledecl
     | expr arguments                                    # functionappl
-    | VAR ID '=' expr                                   # variabledecl
     | ID                                                # varref
     | ID '=' expr                                       # assign
     | INT                                               # int
