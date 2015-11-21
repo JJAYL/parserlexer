@@ -3,8 +3,6 @@ grammar FeatherweightJavaScript;
 @header { package edu.sjsu.fwjs.parser; }
 
 //lexer rules
-//Identifiers
-ID        :[a-zA-Z_][a-zA-Z0-9_]* ; 
 
 
 // Whitespace and comments
@@ -20,6 +18,7 @@ ELSE      : 'else' ;
 WHILE     : 'while' ;
 FUNCTION  : 'function' ;
 PRINT     : 'print' ;
+VAR       : 'var'; 
 
 // Literals
 INT       : [1-9][0-9]* | '0' ;
@@ -39,7 +38,8 @@ LE        : '<=' ;
 EQ        : '==' ;
 SEPARATOR : ';' ;
 
-
+//Identifiers
+ID        :[a-zA-Z_][a-zA-Z0-9_]* ; 
 
 // ***Paring rules ***
 
@@ -50,6 +50,7 @@ stat: expr SEPARATOR                                    # bareExpr
     | IF '(' expr ')' block ELSE block                  # ifThenElse
     | IF '(' expr ')' block                             # ifThen
     | WHILE '(' expr ')' block                          # while
+    | 'while' '(' expr ')' block                        #while
     | PRINT '(' expr ')' SEPARATOR                      # printExpr
     | SEPARATOR                                         # blank
     ;
@@ -58,7 +59,7 @@ expr: expr op=( '*' | '/' | '%' ) expr                  # MulDivMod
     | expr op=( '+' | '-' ) expr                        # AddSub
     | expr op=( '<' | '<=' | '>' | '>=' | '==' ) expr   # Comparison
     | FUNCTION parameters block                         # functiondecl
-    | 'var' ID '=' expr                                 # variabledecl
+    | 'var' ID '=' expr                                   # variabledecl
     | expr arguments                                    # functionappl
     | ID                                                # varref
     | ID '=' expr                                       # assign
