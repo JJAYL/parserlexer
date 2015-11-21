@@ -50,7 +50,6 @@ stat: expr SEPARATOR                                    # bareExpr
     | IF '(' expr ')' block ELSE block                  # ifThenElse
     | IF '(' expr ')' block                             # ifThen
     | WHILE '(' expr ')' block                          # while
-    | 'while' '(' expr ')' block                        #while
     | PRINT '(' expr ')' SEPARATOR                      # printExpr
     | SEPARATOR                                         # blank
     ;
@@ -59,7 +58,7 @@ expr: expr op=( '*' | '/' | '%' ) expr                  # MulDivMod
     | expr op=( '+' | '-' ) expr                        # AddSub
     | expr op=( '<' | '<=' | '>' | '>=' | '==' ) expr   # Comparison
     | FUNCTION parameters block                         # functiondecl
-    | 'var' ID '=' expr                                   # variabledecl
+    | VAR ID '=' expr                                   # variabledecl
     | expr arguments                                    # functionappl
     | ID                                                # varref
     | ID '=' expr                                       # assign
