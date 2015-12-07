@@ -45,8 +45,8 @@ public class ExpressionBuilderVisitor extends FeatherweightJavaScriptBaseVisitor
             return new WhileExpr(cond, body);
     }
 
-  //  @Override
-    public Expression visitPrintExpr(FeatherweightJavaScriptParser.WhileContext ctx)
+    @Override
+    public Expression visitPrintExpr(FeatherweightJavaScriptParser.PrintExprContext ctx)
     {
         Expression exp = visit(ctx.expr());
         return new PrintExpr(exp);
@@ -139,6 +139,8 @@ public class ExpressionBuilderVisitor extends FeatherweightJavaScriptBaseVisitor
                 case FeatherweightJavaScriptParser.EQ:
                         op = Op.EQ;
                         break;
+                default: op= null;
+                         break;
         }
         return new BinOpExpr(op, lhs, rhs);
 
@@ -187,6 +189,20 @@ public Expression visitBool(FeatherweightJavaScriptParser.BoolContext ctx){
         
     }
 
+//    @Override
+//    public Expression visitNull(FeatherweightJavaScriptParser.NullContext ctx)
+//    {
+        //return new VarExpr();
+//    }
+
+    @Override
+    public Expression visitComparison(FeatherweightJavaScriptParser.ComparisonContext ctx)
+    {
+        Expression lhs = visit(ctx.expr(0));
+        Expression rhs = visit(ctx.expr(1));
+        return BinOpHelper(ctx.op.getType(), lhs, rhs);
+    }
+
     @Override
     public Expression visitFullBlock(FeatherweightJavaScriptParser.FullBlockContext ctx) {
         List<Expression> stmts = new ArrayList<Expression>();
@@ -215,5 +231,30 @@ public Expression visitBool(FeatherweightJavaScriptParser.BoolContext ctx){
         return visit(ctx.stat());
     }
 
+    @Override
+    public Expression visitParam(FeatherweightJavaScriptParser.ParamContext ctx)
+    {
+        List<Expression> argus = new ArrayList<Expression>();
+        for(int i = 1; i < ctx.getChildCount()-1; i++)
+        {
+            Expression exp = visit(ctx.getChild(i));
+            argus.add(exp);
+        }
+        return listToSeqExp(argus);
+
+
+    }
+
+    @Override
+    public Expression visitNoparam(FeatherweightJavaScriptParser.NoparamContext ctx)
+    {
+        return null; //dunno what the interpretter is supposed to here
+    }
+
+    @Override
+    public Expression visitNoargs(FeatherweightJavaScriptParser.NoargsContext ctx)
+    {
+        return null;//function declerations?
+    }
 
 }
